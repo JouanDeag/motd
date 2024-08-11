@@ -36,8 +36,18 @@ echo -e "-----------------------------------------"
 # List IP addresses, excluding Docker and container-related interfaces
 
 ip -br a | grep -v 'veth\|br-\|docker\|lo' | while read -r line; do
-        IFS=" " read IFACE STATE IP4 IP6 <<< "$line"
-        echo -e "$IFACE ($G$STATE$W): $IP4 $IP6"
+    IFS=" " read IFACE STATE IP4 IP6 <<< "$line"
+
+    # Set the color based on the STATE
+    if [[ "$STATE" == "DOWN" ]]; then
+        COLOR=$R
+    elif [[ "$STATE" == "UNKNOWN" ]]; then
+        COLOR=$W
+    else
+        COLOR=$G
+    fi
+
+    echo -e "$IFACE ($COLOR$STATE$W): $IP4 $IP6"
 done
 
 echo -e "-----------------------------------------"
