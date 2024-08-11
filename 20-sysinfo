@@ -27,3 +27,17 @@ $W  Processes...:$W $G$PROCESS_ROOT$W (root), $G$PROCESS_USER$W (user), $G$PROCE
 
 $W  CPU.........: $W$PROCESSOR_NAME ($G$PROCESSOR_COUNT$W vCPU)
 $W  Memory......: $G$USED$W used, $G$AVAIL$W avail, $G$TOTAL$W total$W"
+
+# Network Interfaces and IP Addresses section
+echo ""
+echo -e "${W}Network Interfaces and IP Addresses:"
+echo -e "-----------------------------------------"
+
+# List IP addresses, excluding Docker and container-related interfaces
+
+ip -br a | grep -v 'veth\|br-\|docker\|lo' | while read -r line; do
+        IFS=" " read IFACE STATE IP4 IP6 <<< "$line"
+        echo -e "$IFACE ($G$STATE$W): $IP4 $IP6"
+done
+
+echo -e "-----------------------------------------"
